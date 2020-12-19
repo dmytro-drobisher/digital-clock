@@ -59,33 +59,38 @@ void updateTemperature() {
 //multiplexes the display on timer interrupt
 void displayTime() {
   if(displaysEnabled){
-    //enable the digit
     //shift out the number
     //latch the number in the shift register
+    //enable the digit
+    //delay
     //disable the display
     //uses PNP transistors so HIGH input to turn off the digit
     digitalWrite(latchPin, LOW);
-    PORTD = B10111100;
-    shiftOut(dataPin, clockPin, LSBFIRST, segments[number[1]] | decimal[1]);
-    digitalWrite(latchPin, HIGH);
-    PORTD = B11111100;
-
-    digitalWrite(latchPin, LOW);
-    PORTD = B11011100;
-    shiftOut(dataPin, clockPin, LSBFIRST, segments[number[2]] | decimal[2]);
-    digitalWrite(latchPin, HIGH);
-    PORTD = B11111100;
-
-    digitalWrite(latchPin, LOW);
-    PORTD = B11101100;
-    shiftOut(dataPin, clockPin, LSBFIRST, segments[number[3]] | decimal[3]);
-    digitalWrite(latchPin, HIGH);
-    PORTD = B11111100;
-
-    digitalWrite(latchPin, LOW);
-    PORTD = B11110000;
     shiftOut(dataPin, clockPin, LSBFIRST, segments[number[0]] | decimal[0]);
     digitalWrite(latchPin, HIGH);
+    PORTD = B10111100;
+    delayMicroseconds(75);
+    PORTD = B11111100;
+    
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, segments[number[1]] | decimal[1]);
+    digitalWrite(latchPin, HIGH);
+    PORTD = B11011100;
+    delayMicroseconds(75);
+    PORTD = B11111100;
+    
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, segments[number[2]] | decimal[2]);
+    digitalWrite(latchPin, HIGH);
+    PORTD = B11101100;
+    delayMicroseconds(75);
+    PORTD = B11111100;
+
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, segments[number[3]] | decimal[3]);
+    digitalWrite(latchPin, HIGH);
+    PORTD = B11110100;
+    delayMicroseconds(75);
     PORTD = B11111100;
   }
   
@@ -190,7 +195,7 @@ void setup() {
   pinMode(numberThree, OUTPUT);
   pinMode(numberFour, OUTPUT);
 
-  //setup timer interrupt to 1000ns
+  //setup timer interrupt to 1000us
   Timer1.initialize(1000);
   Timer1.attachInterrupt(displayTime);
 
